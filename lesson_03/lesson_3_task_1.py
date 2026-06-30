@@ -1,6 +1,8 @@
 from user import User
 
 
-user1 = User("Ilya", "Trofimov")
-user2 = User("Petr", "Ivanov")
-user3 = User("Olga", "Chernova")
+my_user = User("Ilya", "Trofimov")
+
+print(f"{my_user.first_name}\n"
+      f"{my_user.last_name}\n"
+      f"{my_user.first_name} {my_user.last_name}")

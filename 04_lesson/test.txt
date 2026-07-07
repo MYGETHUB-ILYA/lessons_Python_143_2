@@ -1,0 +1,8 @@
+#    test_capitalize_positive: позитивные тесты      # проверен
+#    test_trim_positive: позитивные тесты            # проверен
+#    test_contains_positive: позитивные тесты        # проверен
+#    test_delete_symbol_positive: позитивные тесты   # проверен
+#   test_capitalize_negative: негативные тесты       # проверен
+#    test_trim_negative: негативные тесты            # проверен
+#    test_contains_negative: негативные тесты        # проверен
+#    test_delete_symbol_negative: негативные тесты   # проверен

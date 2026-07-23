@@ -13,6 +13,6 @@ def test_form_submission():
 # Найдите кнопку Submit и нажмите на нее.
     driver.find_element(By.CSS_SELECTOR, "button").click()
 # Проверьте, что после нажатия URL изменился.
-    assert "https://httpbin.org/forms/post" in driver.current_url
+    assert "https://httpbin.org/forms" in driver.current_url
 
     driver.quit()

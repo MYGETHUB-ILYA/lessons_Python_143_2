@@ -10,14 +10,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options  # добавлен, падал тест
 
 
 def test_dynamic_loading():
-    options = Options()                          # часто падал тест
-    options.page_load_strategy = 'eager'         # часто падал тест
-
-    driver = webdriver.Chrome(options=options)   # часто падал тест
+    driver = webdriver.Chrome()
     driver.maximize_window()
     # 1. Откройте страницу https://the-internet.herokuapp.com/dynamic_loading/2
     driver.get("https://the-internet.herokuapp.com/dynamic_loading/2")

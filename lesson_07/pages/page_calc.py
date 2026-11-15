@@ -16,6 +16,15 @@ class CalcPage:
     BUTTON_PLUS = (
         By.XPATH,
         "//span[@class='operator btn btn-outline-success' and text()='+']")
+    BUTTON_MINUS = (
+        By.XPATH,
+        "//span[@class='operator btn btn-outline-success' and text()='-']")
+    BUTTON_MULTIPLY = (
+        By.XPATH,
+        "//span[@class='operator btn btn-outline-success' and text()='×']")
+    BUTTON_DIVIDE = (
+        By.XPATH,
+        "//span[@class='operator btn btn-outline-success' and text()='÷']")
     BUTTON_EQUALS = (
         By.XPATH,
         "//span[@class='btn btn-outline-warning' and text()='=']")
@@ -26,6 +35,9 @@ class CalcPage:
         self.url = url
         self.wait = WebDriverWait(self.driver, 10)
         self.delay_time = 10
+        self.one_numb = ""
+        self.operator = ""
+        self.two_numb = ""
 
     def open_page(self):
         self.driver.get(self.url)
@@ -34,30 +46,40 @@ class CalcPage:
 
     def input_number_wait(self, wait_time):
         input_field = self.wait.until(
-            EC.element_to_be_clickable(self.WAIT_BOX_VAR)
-        )
+            EC.element_to_be_clickable(
+                self.WAIT_BOX_VAR))
         input_field.clear()
         input_field.send_keys(str(wait_time))
-
         self.delay_time = int(wait_time)
         return self
 
     def result_calculation(self):
         self.wait.until(EC.element_to_be_clickable(self.CLEAN_BUTTON)).click()
+
+        self.one_numb = "7"
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_7)).click()
+
+        self.operator = "+"
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_PLUS)).click()
+
+        self.two_numb = "8"
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_8)).click()
+
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_EQUALS)).click()
         return self
 
-    def assert_calculation(self):
-        dynamic_wait = WebDriverWait(self.driver, self.delay_time + 10)
-        result_present = dynamic_wait.until(
-            EC.text_to_be_present_in_element(self.RESULT_BOX, "15")
-        )
+    @property
+    def text_numb_sum(self):
+        return f"{self.one_numb}{self.operator}{self.two_numb}"
 
-        assert result_present is True, (
-            f"Ожидался результат '15', за {self.delay_time + 5} секунд"
-        )
-        print("Ок. Результат 15")
-        return self
+    def assert_calculation(self, result):
+        WebDriverWait(
+            self.driver,
+            self.delay_time +
+            5).until_not(
+            EC.text_to_be_present_in_element(
+                self.RESULT_BOX,
+                self.text_numb_sum))
+
+        result_element = self.driver.find_element(*self.RESULT_BOX)
+        return result_element.text.strip()

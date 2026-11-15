@@ -4,16 +4,12 @@ from selenium.webdriver.support import expected_conditions as EC
 import faker
 
 fake = faker.Faker('ru_RU')
-first_name = fake.first_name()
-last_name = fake.last_name()
-zip_code = fake.postcode()
 WAIT_TIME = 10
 
 
 class ShopPage:
     LOGIN_USER = "standard_user"
     PASSWORD_USER = "secret_sauce"
-    TOTAL = "$58.29"
 
     # Локаторы для FireFox
     LOGIN_USER_LOCATOR = (By.CSS_SELECTOR, "[data-test='username']")
@@ -39,74 +35,69 @@ class ShopPage:
         self.driver.get(self.url)
         self.driver.maximize_window()
 
-        input_user = self.wait.until(
-            EC.element_to_be_clickable(self.LOGIN_USER_LOCATOR)
-        )
-        input_user.clear()
-        input_user.send_keys(self.LOGIN_USER)
+        user_field = self.wait.until(
+            EC.element_to_be_clickable(
+                self.LOGIN_USER_LOCATOR))
+        user_field.clear()
+        user_field.send_keys(self.LOGIN_USER)
 
-        input_password = self.wait.until(
-            EC.element_to_be_clickable(self.PASSWORD_USER_LOCATOR)
-        )
-        input_password.clear()
-        input_password.send_keys(self.PASSWORD_USER)
+        password_field = self.wait.until(
+            EC.element_to_be_clickable(
+                self.PASSWORD_USER_LOCATOR))
+        password_field.clear()
+        password_field.send_keys(self.PASSWORD_USER)
 
         self.wait.until(
-            EC.element_to_be_clickable(self.BUTTON_LOGIN_LOCATOR)
-        ).click()
+            EC.element_to_be_clickable(
+                self.BUTTON_LOGIN_LOCATOR)).click()
         return self
 
-    def purchase_list(self, total):
-        # товары
+    def purchase_list(self):
         self.wait.until(
-            EC.element_to_be_clickable(self.PRODUCT_1_LOCATOR)
-        ).click()
+            EC.element_to_be_clickable(
+                self.PRODUCT_1_LOCATOR)).click()
         self.wait.until(
-            EC.element_to_be_clickable(self.PRODUCT_2_LOCATOR)
-        ).click()
+            EC.element_to_be_clickable(
+                self.PRODUCT_2_LOCATOR)).click()
         self.wait.until(
-            EC.element_to_be_clickable(self.PRODUCT_3_LOCATOR)
-        ).click()
-        # корзина
-        self.wait.until(
-            EC.element_to_be_clickable(self.CART_CONTAINER_LOCATOR)
-        ).click()
-        self.wait.until(
-            EC.element_to_be_clickable(self.CHECKOUT_LOCATOR)
-        ).click()
+            EC.element_to_be_clickable(
+                self.PRODUCT_3_LOCATOR)).click()
+        return self
 
-        # форма заказа
+    def new_form_purchase(self):
+        self.wait.until(
+            EC.element_to_be_clickable(
+                self.CART_CONTAINER_LOCATOR)).click()
+        self.wait.until(
+            EC.element_to_be_clickable(
+                self.CHECKOUT_LOCATOR)).click()
+        return self
+
+    def client_form(self):
         first_name_field = self.wait.until(
-            EC.element_to_be_clickable(self.FIRST_NAME_LOCATOR)
-        )
+            EC.element_to_be_clickable(
+                self.FIRST_NAME_LOCATOR))
         first_name_field.clear()
-        first_name_field.send_keys(first_name)
+        first_name_field.send_keys(fake.first_name())
 
         last_name_field = self.wait.until(
-            EC.element_to_be_clickable(self.LAST_NAME_LOCATOR)
-        )
+            EC.element_to_be_clickable(
+                self.LAST_NAME_LOCATOR))
         last_name_field.clear()
-        last_name_field.send_keys(last_name)
+        last_name_field.send_keys(fake.last_name())
 
-        postal_code_field = self.wait.until(
-            EC.element_to_be_clickable(self.ZIP_CODE_LOCATOR)
-        )
-        postal_code_field.clear()
-        postal_code_field.send_keys(zip_code)
+        zip_field = self.wait.until(
+            EC.element_to_be_clickable(
+                self.ZIP_CODE_LOCATOR))
+        zip_field.clear()
+        zip_field.send_keys(fake.postcode())
 
         self.wait.until(
-            EC.element_to_be_clickable(self.CONTINUE_LOCATOR)
-        ).click()
-
-        # ТОТАЛ
-        total_cost = self.driver.find_element(
-            *self.TOTAL_LABEL_LOCATOR
-        ).text
-        print(f"Сумма на сайте: {total_cost}")
-
-        if total in total_cost:
-            print(f"Сумма {total_cost} совпадает")
-        else:
-            print("Сумма не совпадает")
-
+            EC.element_to_be_clickable(
+                self.CONTINUE_LOCATOR)).click()
         return self
+
+    def get_total(self):
+        return self.wait.until(
+            EC.visibility_of_element_located(self.TOTAL_LABEL_LOCATOR)
+        ).text
